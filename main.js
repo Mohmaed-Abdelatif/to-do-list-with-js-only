@@ -4,7 +4,6 @@ let tasks = document.querySelector(".tasks");
 let myobject;
 let idCounter = parseInt(window.localStorage.getItem("idCounter")) || 0;
 
-// Function to add a task
 function addTask() {
   if (myinput.value == "") {
     alert("10 Write A Task");
@@ -34,7 +33,6 @@ function addTask() {
       let newText = prompt("Enter the updated task:", mytask.innerText);
       if (newText !== null) {
         mytask.innerText = newText;
-        // Update task text in localStorage
         let storedTasks =
           JSON.parse(window.localStorage.getItem("tasks")) || [];
         storedTasks.forEach((item) => {
@@ -48,7 +46,6 @@ function addTask() {
 
     deletebtn.onclick = function () {
       tasks.removeChild(mytaskdiv);
-      // Remove the task data from local storage when deleted
       let storedTasks = JSON.parse(window.localStorage.getItem("tasks")) || [];
       storedTasks = storedTasks.filter((item) => item.id !== myobject.id);
       window.localStorage.setItem("tasks", JSON.stringify(storedTasks));
@@ -60,7 +57,7 @@ function addTask() {
       let storedTasks = JSON.parse(window.localStorage.getItem("tasks")) || [];
       storedTasks.forEach((item) => {
         if (item.id === myobject.id) {
-          item.completed = !item.completed; // Toggle completion status
+          item.completed = !item.completed; 
         }
       });
       window.localStorage.setItem("tasks", JSON.stringify(storedTasks));
@@ -75,7 +72,7 @@ function addTask() {
     const myobject = {
       id: idCounter++,
       title: task,
-      completed: false, // Default completion status
+      completed: false, 
     };
 
     let storedTasks = JSON.parse(window.localStorage.getItem("tasks")) || [];
@@ -125,7 +122,6 @@ window.addEventListener("load", function () {
       let newText = prompt("Enter the updated task:", mytask.innerText);
       if (newText !== "null") {
         mytask.innerText = newText;
-        // Update task text in localStorage
         let storedTasks =
           JSON.parse(window.localStorage.getItem("tasks")) || [];
         storedTasks.forEach((item) => {
@@ -146,11 +142,10 @@ window.addEventListener("load", function () {
 
     donebtn.onclick = function () {
       mytask.classList.toggle("completed");
-      // Update completion status in localStorage
       let storedTasks = JSON.parse(window.localStorage.getItem("tasks")) || [];
       storedTasks.forEach((item) => {
         if (item.id === task.id) {
-          item.completed = !item.completed; // Toggle completion status
+          item.completed = !item.completed; 
         }
       });
       window.localStorage.setItem("tasks", JSON.stringify(storedTasks));
