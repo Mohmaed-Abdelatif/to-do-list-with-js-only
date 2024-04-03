@@ -2,156 +2,117 @@ let myinput = document.querySelector(".input");
 let btn = document.querySelector(".add");
 let tasks = document.querySelector(".tasks");
 let i = 0;
-let myobject; // Define myobject at a higher scope
+let myobject; 
 
-// if(){
-
-// }
-btn.onclick = function () {
+// Function to add a task
+function addTask() {
     let task = myinput.value;
 
     let mytaskdiv = document.createElement("div");
     let mytask = document.createElement("div");
+    let editbtn = document.createElement("button");
     let deletebtn = document.createElement("button");
 
-    mytaskdiv.className = "mytaskdiv";
-    mytask.className = "mytask";
-    deletebtn.className = "deletebtn";
+    mytaskdiv.className = "mytaskdiv card p-2 mb-2";
+    mytask.className = "mytask card-body";
+    editbtn.className = "editbtn btn btn-primary btn-sm me-1";
+    deletebtn.className = "deletebtn btn btn-danger btn-sm";
 
     mytask.innerText = task;
-    deletebtn.innerText = "delete";
-    deletebtn.onclick = function x() {
-        tasks.removeChild(mytaskdiv); //delete the task from the visible task lest
+    editbtn.innerText = "Edit";
+    deletebtn.innerText = "Delete";
+    
+    editbtn.onclick = function () {
+        let newText = prompt("Enter the updated task:", mytask.innerText);
+        if (newText !== null) {
+            mytask.innerText = newText;
+            // Update task text in localStorage
+            let storedTasks = JSON.parse(window.localStorage.getItem("tasks")) || [];
+            storedTasks.forEach((item) => {
+                if (item.id === myobject.id) {
+                    item.title = newText;
+                }
+            });
+            window.localStorage.setItem("tasks", JSON.stringify(storedTasks));
+        }
+    };
+
+    deletebtn.onclick = function () {
+        tasks.removeChild(mytaskdiv);
         // Remove the task data from local storage when deleted
         let storedTasks = JSON.parse(window.localStorage.getItem("tasks")) || [];
-        storedTasks = storedTasks.filter((item) => item.id !== myobject.id); //find task that has id deleted
+        storedTasks = storedTasks.filter((item) => item.id !== myobject.id);
         window.localStorage.setItem("tasks", JSON.stringify(storedTasks));
     };
 
-    mytaskdiv.appendChild(mytask);
+    mytaskdiv.appendChild(editbtn);
     mytaskdiv.appendChild(deletebtn);
+    mytaskdiv.appendChild(mytask);
 
     const myobject = {
         id: i++,
         title: task,
     };
 
-    // Store the task data in local storage
-    //not overide,if impity put[]
-    let storedTasks = JSON.parse(window.localStorage.getItem("tasks")) || []; 
-    storedTasks.push(myobject); //add a new takd for tasks object in local storge
-    window.localStorage.setItem("tasks", JSON.stringify(storedTasks)); //stored task to update local storge
+    let storedTasks = JSON.parse(window.localStorage.getItem("tasks")) || [];
+    storedTasks.push(myobject);
+    window.localStorage.setItem("tasks", JSON.stringify(storedTasks));
 
     tasks.appendChild(mytaskdiv);
     myinput.value = "";
-};
+}
 
-// Load tasks from local storage on page load
+btn.onclick = addTask;
+
+myinput.addEventListener("keyup", function(event) {
+    if (event.keyCode === 13) { 
+        addTask();
+    }
+});
+
 window.addEventListener("load", function () {
     let storedTasks = JSON.parse(window.localStorage.getItem("tasks")) || [];
     for (const task of storedTasks) {
         let mytaskdiv = document.createElement("div");
         let mytask = document.createElement("div");
+        let editbtn = document.createElement("button");
         let deletebtn = document.createElement("button");
 
-        mytaskdiv.className = "mytaskdiv";
-        mytask.className = "mytask";
-        deletebtn.className = "deletebtn";
+        mytaskdiv.className = "mytaskdiv card p-2 mb-2";
+        mytask.className = "mytask card-body";
+        editbtn.className = "editbtn btn btn-primary btn-sm me-1";
+        deletebtn.className = "deletebtn btn btn-danger btn-sm";
 
         mytask.innerText = task.title;
-        deletebtn.innerText = "delete";
+        editbtn.innerText = "Edit";
+        deletebtn.innerText = "Delete";
+        
+        editbtn.onclick = function () {
+            let newText = prompt("Enter the updated task:", mytask.innerText);
+            if (newText !== 'null') {
+                mytask.innerText = newText;
+                // Update task text in localStorage
+                let storedTasks = JSON.parse(window.localStorage.getItem("tasks")) || [];
+                storedTasks.forEach((item) => {
+                    if (item.id === task.id) {
+                        item.title = newText;
+                    }
+                });
+                window.localStorage.setItem("tasks", JSON.stringify(storedTasks));
+            }
+        };
+
         deletebtn.onclick = function () {
             tasks.removeChild(mytaskdiv);
-            // Remove the task data from local storage when deleted
             let storedTasks = JSON.parse(window.localStorage.getItem("tasks")) || [];
-            storedTasks = storedTasks.filter((item) => item.id !== task.id); // Use task.id
+            storedTasks = storedTasks.filter((item) => item.id !== task.id);
             window.localStorage.setItem("tasks", JSON.stringify(storedTasks));
         };
 
-        mytaskdiv.appendChild(mytask);
+        mytaskdiv.appendChild(editbtn);
         mytaskdiv.appendChild(deletebtn);
+        mytaskdiv.appendChild(mytask);
 
         tasks.appendChild(mytaskdiv);
     }
-
 });
-
-/////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-// let myinput = document.querySelector(".input");
-// let btn = document.querySelector(".add");
-// let tasks = document.querySelector(".tasks");
-// let i = 0;
-
-// function createTaskElement(task, id) {
-//     let taskDiv = document.createElement("div");
-//     let taskTitle = document.createElement("div");
-//     let deleteButton = document.createElement("button");
-
-//     taskDiv.className = "mytaskdiv";
-//     taskTitle.className = "mytask";
-//     deleteButton.className = "deletebtn";
-
-//     taskTitle.innerText = task;
-//     deleteButton.innerText = "delete";
-
-//     deleteButton.onclick = function () {
-//         deleteTask(id);
-//     };
-
-//     taskDiv.appendChild(taskTitle);
-//     taskDiv.appendChild(deleteButton);
-
-//     return taskDiv;
-// }
-
-// function deleteTask(id) {
-//     let storedTasks = getStoredTasks();
-//     let updatedTasks = storedTasks.filter((item) => item.id !== id);
-//     updateStoredTasks(updatedTasks);
-//     updateTaskList();
-// }
-
-// function getStoredTasks() {
-//     return JSON.parse(window.localStorage.getItem("tasks")) || [];
-// }
-
-// function updateStoredTasks(tasks) {
-//     window.localStorage.setItem("tasks", JSON.stringify(tasks));
-// }
-
-// function updateTaskList() {
-//     let storedTasks = getStoredTasks();
-//     tasks.innerHTML = ""; // Clear the existing task list
-
-//     for (const task of storedTasks) {
-//         let taskDiv = createTaskElement(task.title, task.id);
-//         tasks.appendChild(taskDiv);
-//     }
-// }
-
-// btn.onclick = function () {
-//     let task = myinput.value;
-
-//     if (task.trim() === "") {
-//         alert("Please enter a task.");
-//         return;
-//     }
-
-//     const myobject = {
-//         id: i++,
-//         title: task,
-//     };
-
-//     let storedTasks = getStoredTasks();
-//     storedTasks.push(myobject);
-//     updateStoredTasks(storedTasks);
-//     updateTaskList();
-
-//     myinput.value = "";
-// };
-
-// // Load tasks from local storage on page load
-// window.addEventListener("load", function () {
-//     updateTaskList();
-// });
